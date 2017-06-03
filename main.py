@@ -187,6 +187,10 @@ class GameState:
                             pac.num_died += 1
                             if pac.num_died == 3:
                                 raise Exception('Pacman died 3 times')
+            if agents[oi].capsule_timer > 0:
+                agents[oi].capsule_timer -= 1
+                if agents[oi].capsule_timer == 0 and isinstance(agents[oi], Pacman):
+                    agents[oi].num_ghost_eaton = 0
         return game_state
 
     def _clone(self):
@@ -222,6 +226,7 @@ class AgentState:
         legal = game_state.get_legal_actions(self.index)
         return random.choice(legal)
 
+
 class Pacman(AgentState):
     def __init__(self):
         AgentState.__init__(self)
@@ -229,6 +234,7 @@ class Pacman(AgentState):
         self.num_died = 0
 
     def get_action(self, game_state, screen):
+        screen.nodelay(0)
         event = screen.getch()
         if event == ord('w'):
             return UP
