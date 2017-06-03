@@ -13,30 +13,30 @@ MAP_STR = """
 |,|,.,+,-,-,+,.,+,-,-,-,+,.,|,|,.,+,-,-,-,+,.,+,-,-,+,.,|,|
 |,|,I,|,,,|,.,|,,,,|,.,|,|,.,|,,,,|,.,|,,,|,I,|,|
 |,|,.,+,-,-,+,.,+,-,-,-,+,.,+,+,.,+,-,-,-,+,.,+,-,-,+,.,|,|
-|,|,.,,,M,,.,,,,,,.,,,.,,,,,,.,,M,,,.,|,|
-|,|,.,+,-,-,+,.,+,+,,+,-,-,-,-,-,-,+,,+,+,.,+,-,-,+,.,|,|
-|,|,.,+,-,-,+,.,|,|,,+,-,-,+,+,-,-,+,M,|,|,.,+,-,-,+,.,|,|
-|,|,.,.,.,.,.,.,|,|,,,,,|,|,,,,,|,|,.,,,,,.,|,|
-|,+,-,-,-,-,+,.,|,+,-,-,+,,|,|,,+,-,-,+,|,.,+,-,-,-,-,+,|
-+,-,-,-,-,+,|,.,|,+,-,-,+,,+,+,,+,-,-,+,|,.,|,+,-,-,-,-,+
-,,,,,|,|,.,|,|,.,,,,,,,,,.,|,|,.,|,|,,,,,
-+,-,-,-,-,+,|,.,|,|,.,+,-,-,-,-,-,-,+,.,|,|,.,|,+,-,-,-,-,+
+|,|,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,|,|
+|,|,.,+,-,-,+,.,+,+,.,+,-,-,-,-,-,-,+,.,+,+,.,+,-,-,+,.,|,|
+|,|,.,+,-,-,+,.,|,|,.,+,-,-,+,+,-,-,+,.,|,|,.,+,-,-,+,.,|,|
+|,|,.,.,.,.,.,.,|,|,.,.,.,.,|,|,.,.,.,.,|,|,.,.,.,.,.,.,|,|
+|,+,-,-,-,-,+,.,|,+,-,-,+,.,|,|,.,+,-,-,+,|,.,+,-,-,-,-,+,|
++,-,-,-,-,+,|,.,|,+,-,-,+,.,+,+,.,+,-,-,+,|,.,|,+,-,-,-,-,+
+,,,,,|,|,.,|,|,.,.,.,.,.,.,.,.,.,.,|,|,.,|,|,,,,,
++,-,-,-,-,+,|,.,|,|,.,+,-,-,,,-,-,+,.,|,|,.,|,+,-,-,-,-,+
++,-,-,-,-,-,+,.,+,+,.,|,+,-,,,-,+,|,.,+,+,.,+,-,-,-,-,-,+
+.,.,.,.,.,.,.,.,.,.,.,|,|,M,M,M,M,|,|,.,.,.,.,.,.,.,.,.,.,.
 +,-,-,-,-,-,+,.,+,+,.,|,+,-,-,-,-,+,|,.,+,+,.,+,-,-,-,-,-,+
-,,,,,,,.,,,.,|,|,,,,,|,|,.,,,.,,,,,,,
-+,-,-,-,-,-,+,.,+,+,.,|,+,-,-,-,-,+,|,.,+,+,.,+,-,-,-,-,-,+
 +,-,-,-,-,+,|,.,|,|,.,+,-,-,-,-,-,-,+,.,|,|,.,|,+,-,-,-,-,+
-,,,,,|,|,.,|,|,.,,,,,,,,,.,|,|,.,|,|,,,,,
+,,,,,|,|,.,|,|,.,.,.,P,.,.,.,.,.,.,|,|,.,|,|,,,,,
 +,-,-,-,-,+,|,.,|,|,.,+,-,-,-,-,-,-,+,.,|,|,.,|,+,-,-,-,-,+
 |,+,-,-,-,-,+,.,+,+,.,+,-,-,+,+,-,-,+,.,+,+,.,+,-,-,-,-,+,|
-|,|,.,.,.,.,.,.,.,.,.,.,.,.,|,|,,,,,,,.,,,,,,|,|
-|,|,.,+,-,-,+,.,+,-,-,-,+,P,|,|,,+,-,-,-,+,.,+,-,-,+,,|,|
-|,|,.,+,-,+,|,.,+,-,-,-,+,,+,+,,+,-,-,-,+,.,|,+,-,+,,|,|
-|,|,I,.,.,|,|,.,,,,,,,,,,,,,,,.,|,|,,,I,|,|
-|,+,-,+,.,|,|,.,+,+,,+,-,-,-,-,-,-,+,M,+,+,.,|,|,,+,-,+,|
-|,+,-,+,.,+,+,.,|,|,,+,-,-,+,+,-,-,+,,|,|,.,+,+,,+,-,+,|
-|,|,.,,.,,,.,|,|,,,,,|,|,,,,,|,|,.,,,,,,|,|
-|,|,.,+,-,-,-,-,+,+,-,-,+,,|,|,,+,-,-,+,+,-,-,-,-,+,,|,|
-|,|,.,+,-,-,-,-,-,-,-,-,+,,+,+,,+,-,-,-,-,-,-,-,-,+,,|,|
+|,|,.,.,.,.,.,.,.,.,.,.,.,.,|,|,.,.,.,.,.,.,.,.,.,.,.,.,|,|
+|,|,.,+,-,-,+,.,+,-,-,-,+,.,|,|,.,+,-,-,-,+,.,+,-,-,+,.,|,|
+|,|,.,+,-,+,|,.,+,-,-,-,+,.,+,+,.,+,-,-,-,+,.,|,+,-,+,.,|,|
+|,|,I,.,.,|,|,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,|,|,.,.,I,|,|
+|,+,-,+,.,|,|,.,+,+,.,+,-,-,-,-,-,-,+,.,+,+,.,|,|,.,+,-,+,|
+|,+,-,+,.,+,+,.,|,|,.,+,-,-,+,+,-,-,+,.,|,|,.,+,+,.,+,-,+,|
+|,|,.,.,.,.,.,.,|,|,.,.,.,.,|,|,.,.,.,.,|,|,.,.,.,.,.,.,|,|
+|,|,.,+,-,-,-,-,+,+,-,-,+,.,|,|,.,+,-,-,+,+,-,-,-,-,+,.,|,|
+|,|,.,+,-,-,-,-,-,-,-,-,+,.,+,+,.,+,-,-,-,-,-,-,-,-,+,.,|,|
 |,|,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,|,|
 |,+,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,+,|
 +,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,+
@@ -50,6 +50,7 @@ WALL = {'+', '-', '|'}
 MAP = []
 INIT_PACMAN = None
 INIT_GHOST = None
+DIS = {}
 
 
 def init_screen(screen):
@@ -108,6 +109,22 @@ def init_screen(screen):
             game_state.agent_states[i], game_state.agent_states[0] = game_state.agent_states[0], game_state.agent_states[i]
     for i in range(len(game_state.agent_states)):
         game_state.agent_states[i].index = i
+
+    # ps = [(i, j) for i in range(len(MAP)) for j in range(len(MAP[0]))]
+    # for i in range(len(ps)):
+    #     for j in range(len(ps)):
+    #         DIS[(ps[i], ps[j])] = 100000
+    #         if i == j:
+    #             DIS[(ps[i], ps[j])] = 0
+    #         a = ps[i]
+    #         b = ps[j]
+    #         if MAP[a[0]][a[1]] not in WALL and MAP[b[0]][b[i]] not in WALL and abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1:
+    #             DIS[(a, b)] = 1
+    # for k in range(len(ps)):
+    #     for i in range(len(ps)):
+    #         for j in range(len(ps)):
+    #             if DIS[(ps[i], ps[j])] < DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]:
+    #                 DIS[(ps[i], ps[j])] = DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]
     display(screen, style, game_state)
 
     # while True:
@@ -234,7 +251,6 @@ class Pacman(AgentState):
         self.num_died = 0
 
     def get_action(self, game_state, screen):
-        screen.nodelay(0)
         event = screen.getch()
         if event == ord('w'):
             return UP
@@ -246,10 +262,38 @@ class Pacman(AgentState):
             return RIGHT
         return self.dir
 
+AI_DEPTH = 2
 
 class Ghost(AgentState):
     def __init__(self):
         AgentState.__init__(self)
+
+    def get_action(self, game_state, screen):
+        return random.choice(game_state.get_legal_actions(self.index))
+        return self.minimax(game_state, 0)[1]
+
+    def minimax(self, game_state, layer):
+        if layer == AI_DEPTH * len(game_state.agent_states):
+            return self.evaluate(game_state), None
+        id = (self.index + layer) % len(game_state.agent_states)
+        score_actions = []
+        for action in game_state.get_legal_actions(id):
+            score_actions.append((self.minimax(game_state, layer + 1), action))
+        if layer % len(game_state.agent_states) == 0:
+            score = max(score_actions)
+        else:
+            score = min(score_actions)
+        return random.choice((s, a) for s, a in score_actions if s == score)
+
+    def evaluate(self, game_state):
+        agents = game_state.agent_states
+        score = -game_state.score
+        me = agents[self.index]
+        if me.capsule_timer > 0:
+            score -= DIS[(me, agents[0].pos)] * 0.1
+        else:
+            score += DIS[(me, agents[0].pos)] * 0.1
+        return score
 
 
 def run(screen, style, game_state):
@@ -285,6 +329,7 @@ def display(screen, style, game_state):
             screen.addstr(agent.pos[0], agent.pos[1], PACMAN, style[PACMAN])
         else:
             screen.addstr(agent.pos[0], agent.pos[1], GHOST, style[GHOST])
+    #game_state.
     screen.refresh()
 
 def debug(info):
