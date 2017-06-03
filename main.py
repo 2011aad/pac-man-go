@@ -4,7 +4,7 @@ import curses
 
 import time
 
-MAP = """
+MAP_STR = """
 +,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,+
 |,+,-,-,-,-,-,-,-,-,-,-,-,-,+,+,-,-,-,-,-,-,-,-,-,-,-,-,+,|
 |,|,.,.,.,.,.,.,.,.,.,.,.,.,|,|,.,.,.,.,.,.,.,.,.,.,.,.,|,|
@@ -43,6 +43,8 @@ CAPSULE = 'I'
 PACMAN = 'P'
 GHOST = 'M'
 
+MAP = [[]]
+
 
 def init_screen(screen):
     curses.curs_set(0)
@@ -67,47 +69,88 @@ def init_screen(screen):
     game_state = GameState()
 
     row = 0
-    for line in MAP.strip().split("\n"):
+    for line in MAP_STR.strip().split("\n"):
         row = row + 1
         col = 0
         for ch in line.strip().split(","):
             col = col + 1
             if ch:
                 screen.addstr(row, col, ch, style[ch])
+                # TODO update game_state
 
-    run(screen, game_state)
-    screen.refresh()
-    screen.addstr(7, 8, 'I', style['I'])
-    time.sleep(10)
-    while True:
-        screen.refresh()
-        # event = screen.getch()
-        # if event == 27:
-        #     pass
-            # break
+    run(screen, style, game_state)
+
 
 TIME_STEP = 100
 STEP_DURATION = 0.5
 
+UP = (-1, 0)
+DOWN = (1, 0)
+LEFT = (0, -1)
+RIGHT = (0, 1)
+STOP = (0, 0)
+
 
 class GameState:
-    pass
+    def __init__(self):
+        self.agent_states = []
+        self.foods = []
+        self.capsules = []
+        self.score = 0
 
-def run(screen, game_state):
+
+class AgentState:
+    def __init__(self):
+        self.pos = (0, 0)
+        self.dir = STOP
+        self.speed = 1
+        self.capsule_timer = 0
+        pass
+
+    def get_action(self, game_state):
+        """ return an action """
+        pass
+
+    def generate_successor(self, game_state, action):
+        """ return a new game_state """
+        pass
+
+    def get_legal_actions(self, game_state):
+        """ return a list of action """
+
+
+class Pacman(AgentState):
+    def __init__(self):
+        AgentState.__init__(self)
+        self.num_ghost_eaton = 0
+        self.num_died = 0
+
+
+class Ghost(AgentState):
+    def __init__(self):
+        AgentState.__init__(self)
+
+
+def run(screen, style, game_state):
     for crt_time in range(TIME_STEP):
         begin = time.clock()
         for agent_state in game_state.agent_states:
             if crt_time % agent_state.speed == 0:
-                action = agent_state.getAction(game_state)
-                game_state = agent_state.generateSuccessor(game_state, action)
-                display(screen, game_state)
+                action = agent_state.get_action(game_state)
+                game_state = agent_state.generate_successor(game_state, action)
+                display(screen, style, game_state)
         spend = min(STEP_DURATION, time.clock() - begin)
         sleep_time = STEP_DURATION - spend
         time.sleep(sleep_time)
 
 
+def display(screen, style, game_state):
+    pass
+
+
 def debug(info):
     pass
+
 
 def main():
     curses.wrapper(init_screen)
