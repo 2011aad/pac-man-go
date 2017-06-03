@@ -42,8 +42,11 @@ MAP_STR = """
 CAPSULE = 'I'
 PACMAN = 'P'
 GHOST = 'M'
+FOOD = '.'
 
-MAP = [[]]
+MAP = []
+INIT_PACMAN = None
+INIT_GHOST = None
 
 
 def init_screen(screen):
@@ -72,11 +75,22 @@ def init_screen(screen):
     for line in MAP_STR.strip().split("\n"):
         row = row + 1
         col = 0
+        MAP.append([])
         for ch in line.strip().split(","):
             col = col + 1
             if ch:
                 screen.addstr(row, col, ch, style[ch])
+                MAP[-1].append(ch)
+                if ch==PACMAN:
+                    game_state.agent_states.append(Pacman)
+                if ch==FOOD:
+                    game_state.food.append((row, col))
+                if ch==GHOST:
+                    game_state.agent_states.append()
+            else:
+                MAP[-1].append(' ')
                 # TODO update game_state
+
 
     run(screen, style, game_state)
 
@@ -98,6 +112,13 @@ class GameState:
         self.capsules = []
         self.score = 0
 
+    def generate_successor(self, index, action):
+        """ return a new game_state """
+        pass
+
+    def get_legal_actions(self, index):
+        """ return a list of action """
+
 
 class AgentState:
     def __init__(self):
@@ -110,13 +131,6 @@ class AgentState:
     def get_action(self, game_state):
         """ return an action """
         pass
-
-    def generate_successor(self, game_state, action):
-        """ return a new game_state """
-        pass
-
-    def get_legal_actions(self, game_state):
-        """ return a list of action """
 
 
 class Pacman(AgentState):
@@ -134,10 +148,11 @@ class Ghost(AgentState):
 def run(screen, style, game_state):
     for crt_time in range(TIME_STEP):
         begin = time.clock()
-        for agent_state in game_state.agent_states:
+        for index in range(len(game_state.agent_states)):
+            agent_state = game_state.agent_states[index]
             if crt_time % agent_state.speed == 0:
                 action = agent_state.get_action(game_state)
-                game_state = agent_state.generate_successor(game_state, action)
+                game_state = game_state.generate_successor(index, action)
                 display(screen, style, game_state)
         spend = min(STEP_DURATION, time.clock() - begin)
         sleep_time = STEP_DURATION - spend
