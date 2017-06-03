@@ -1,8 +1,10 @@
 #! /usr/bin/env python
-
+import copy
 import curses
+from pprint import pprint
 
 import time
+import random
 
 MAP_STR = """
 +,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,+
@@ -43,6 +45,7 @@ CAPSULE = 'I'
 PACMAN = 'P'
 GHOST = 'M'
 FOOD = '.'
+WALL = {'+', '-', '|'}
 
 MAP = []
 INIT_PACMAN = None
@@ -84,6 +87,7 @@ def init_screen(screen):
                 if ch == PACMAN:
                     pac = Pacman()
                     pac.pos = (row-1, col-1)
+                    global INIT_PACMAN
                     INIT_PACMAN = pac.pos
                     game_state.agent_states.append(pac)
                 if ch == FOOD:
@@ -91,6 +95,7 @@ def init_screen(screen):
                 if ch == GHOST:
                     ghost = Ghost()
                     ghost.pos = (row-1, col-1)
+                    global INIT_GHOST
                     INIT_GHOST = ghost.pos
                     game_state.agent_states.append(ghost)
                 if ch == CAPSULE:
@@ -101,27 +106,30 @@ def init_screen(screen):
     for i in range(len(game_state.agent_states)):
         if isinstance(game_state.agent_states[i], Pacman):
             game_state.agent_states[i], game_state.agent_states[0] = game_state.agent_states[0], game_state.agent_states[i]
-
+    for i in range(len(game_state.agent_states)):
+        game_state.agent_states[i].index = i
     display(screen, style, game_state)
 
-    while True:
-        time.sleep(5)
-        (row, col) = game_state.agent_states[0].pos
-        game_state.agent_states[0].pos = (row + 1, col)
-        display(screen, style, game_state)
-        pass
+    # while True:
+    #     time.sleep(5)
+    #     (row, col) = game_state.agent_states[0].pos
+    #     game_state.agent_states[0].pos = (row + 1, col)
+    #     display(screen, style, game_state)
+    #     pass
 
-    #run(screen, style, game_state)
+    run(screen, style, game_state)
 
 
 TIME_STEP = 100
-STEP_DURATION = 0.5
+STEP_DURATION = 2
+CAPSULE_TIMEOUT = 10
 
 UP = (-1, 0)
 DOWN = (1, 0)
 LEFT = (0, -1)
 RIGHT = (0, 1)
 STOP = (0, 0)
+ACTIONS = [STOP, UP, DOWN, LEFT, RIGHT]
 
 
 class GameState:
@@ -133,14 +141,73 @@ class GameState:
 
     def generate_successor(self, index, action):
         """ return a new game_state """
-        pass
+        game_state = self._clone()
+        agents = game_state.agent_states
+        ai = agents[index]
+        ai.dir = action
+        ai.pos = ai.pos[0] + action[0], ai.pos[1] + action[1]
+
+        # check and update
+        if isinstance(ai, Pacman):
+            if ai.pos in game_state.foods:
+                game_state.score += 10
+                game_state.foods.remove(ai.pos)
+            if ai.pos in game_state.capsules:
+                game_state.capsules.remove(ai.pos)
+                for agent in agents:
+                    agent.capsule_timer = CAPSULE_TIMEOUT
+        for oi in range(len(agents)):
+            if oi != index:
+                ao = agents[oi]
+                if ao.pos == ai.pos:
+                    # meet
+                    pac, gho = None, None
+                    if isinstance(ai, Pacman) and isinstance(ao, Ghost):
+                        pac, gho = ai, ao
+                    elif isinstance(ai, Ghost) and isinstance(ao, Pacman):
+                        pac, gho = ao, ai
+                    if pac is not None and gho is not None:
+                        if gho.capsule_timer > 0:
+                            # ghost died
+                            gho.pos = INIT_GHOST
+                            gho.dir = STOP
+                            gho.capsule_timer = 0
+                            gho.speed = 1
+
+                            pac.num_ghost_eaton += 1
+                            game_state.score += 200 * pac.num_ghost_eaton
+                        else:
+                            # pacman died
+                            pac.pos = INIT_PACMAN
+                            pac.dir = STOP
+
+                            pac.num_died += 1
+                            if pac.num_died == 3:
+                                raise Exception('Pacman died 3 times')
+        return game_state
+
+    def _clone(self):
+        game_state = GameState()
+        game_state.foods = self.foods[:]
+        game_state.capsules = self.capsules[:]
+        game_state.score = self.score
+        game_state.agent_states = [copy.copy(a) for a in self.agent_states]
+        return game_state
 
     def get_legal_actions(self, index):
         """ return a list of action """
+        actions = []
+        agent = self.agent_states[index]
+        for action in ACTIONS:
+            pos = agent.pos[0] + action[0], agent.pos[1] + action[1]
+            if MAP[pos[0]][pos[1]] not in WALL:
+                actions.append(action)
+        return actions
 
 
 class AgentState:
     def __init__(self):
+        self.index = -1
         self.pos = (0, 0)
         self.dir = STOP
         self.speed = 1
@@ -149,8 +216,8 @@ class AgentState:
 
     def get_action(self, game_state):
         """ return an action """
-        pass
-
+        legal = game_state.get_legal_actions(self.index)
+        return random.choice(legal)
 
 class Pacman(AgentState):
     def __init__(self):
@@ -198,7 +265,6 @@ def display(screen, style, game_state):
         else:
             screen.addstr(agent.pos[0], agent.pos[1], GHOST, style[GHOST])
     screen.refresh()
-
 
 def debug(info):
     pass
