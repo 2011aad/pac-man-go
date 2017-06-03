@@ -54,7 +54,7 @@ INIT_GHOST = None
 
 def init_screen(screen):
     curses.curs_set(0)
-    curses.halfdelay(200)
+    curses.halfdelay(100)
 
     curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
@@ -121,7 +121,7 @@ def init_screen(screen):
 
 
 TIME_STEP = 100
-STEP_DURATION = 2
+STEP_DURATION = 1
 CAPSULE_TIMEOUT = 10
 
 UP = (-1, 0)
@@ -141,6 +141,9 @@ class GameState:
 
     def generate_successor(self, index, action):
         """ return a new game_state """
+        if action not in self.get_legal_actions(index):
+            action = STOP
+
         game_state = self._clone()
         agents = game_state.agent_states
         ai = agents[index]
@@ -214,7 +217,7 @@ class AgentState:
         self.capsule_timer = 0
         pass
 
-    def get_action(self, game_state):
+    def get_action(self, game_state, screen):
         """ return an action """
         legal = game_state.get_legal_actions(self.index)
         return random.choice(legal)
@@ -224,6 +227,18 @@ class Pacman(AgentState):
         AgentState.__init__(self)
         self.num_ghost_eaton = 0
         self.num_died = 0
+
+    def get_action(self, game_state, screen):
+        event = screen.getch()
+        if event == ord('w'):
+            return UP
+        if event == ord('s'):
+            return DOWN
+        if event == ord('a'):
+            return LEFT
+        if event == ord('d'):
+            return RIGHT
+        return self.dir
 
 
 class Ghost(AgentState):
@@ -237,7 +252,7 @@ def run(screen, style, game_state):
         for index in range(len(game_state.agent_states)):
             agent_state = game_state.agent_states[index]
             if crt_time % agent_state.speed == 0:
-                action = agent_state.get_action(game_state)
+                action = agent_state.get_action(game_state, screen)
                 game_state = game_state.generate_successor(index, action)
                 display(screen, style, game_state)
         spend = min(STEP_DURATION, time.clock() - begin)
