@@ -110,21 +110,23 @@ def init_screen(screen):
     for i in range(len(game_state.agent_states)):
         game_state.agent_states[i].index = i
 
-    # ps = [(i, j) for i in range(len(MAP)) for j in range(len(MAP[0]))]
-    # for i in range(len(ps)):
-    #     for j in range(len(ps)):
-    #         DIS[(ps[i], ps[j])] = 100000
-    #         if i == j:
-    #             DIS[(ps[i], ps[j])] = 0
-    #         a = ps[i]
-    #         b = ps[j]
-    #         if MAP[a[0]][a[1]] not in WALL and MAP[b[0]][b[i]] not in WALL and abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1:
-    #             DIS[(a, b)] = 1
-    # for k in range(len(ps)):
-    #     for i in range(len(ps)):
-    #         for j in range(len(ps)):
-    #             if DIS[(ps[i], ps[j])] < DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]:
-    #                 DIS[(ps[i], ps[j])] = DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]
+    ps = [(i, j) for i in range(len(MAP)) for j in range(len(MAP[0]))]
+    for i in range(len(ps)):
+        for j in range(len(ps)):
+            DIS[(ps[i], ps[j])] = 100000
+            if i == j:
+                DIS[(ps[i], ps[j])] = 0
+            a = ps[i]
+            b = ps[j]
+            if MAP[a[0]][a[1]] not in WALL and MAP[b[0]][b[1]] not in WALL and abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1:
+                DIS[(a, b)] = 1
+    for k in range(len(ps)):
+        for i in range(len(ps)):
+            if DIS[(ps[i], ps[k])] > 9999:
+                continue
+            for j in range(len(ps)):
+                if DIS[(ps[i], ps[j])] < DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]:
+                    DIS[(ps[i], ps[j])] = DIS[(ps[i], ps[k])] + DIS[(ps[k], ps[j])]
     display(screen, style, game_state)
 
     # while True:
@@ -203,7 +205,7 @@ class GameState:
 
                             pac.num_died += 1
                             if pac.num_died == 3:
-                                raise Exception('Pacman died 3 times')
+                                raise Exception('Pacman died 3 times, Points: ' + str(game_state.score))
             if agents[oi].capsule_timer > 0:
                 agents[oi].capsule_timer -= 1
                 if agents[oi].capsule_timer == 0 and isinstance(agents[oi], Pacman):
@@ -262,14 +264,17 @@ class Pacman(AgentState):
             return RIGHT
         return self.dir
 
-AI_DEPTH = 2
+AI_DEPTH = 1
 
 class Ghost(AgentState):
     def __init__(self):
         AgentState.__init__(self)
 
     def get_action(self, game_state, screen):
-        return random.choice(game_state.get_legal_actions(self.index))
+        return min([(DIS[(game_state.generate_successor(self.index, action).agent_states[self.index].pos,
+                          game_state.agent_states[0].pos)], action)
+                    for action in game_state.get_legal_actions(self.index)])[1]
+        # return random.choice(game_state.get_legal_actions(self.index))
         return self.minimax(game_state, 0)[1]
 
     def minimax(self, game_state, layer):
@@ -283,16 +288,18 @@ class Ghost(AgentState):
             score = max(score_actions)
         else:
             score = min(score_actions)
-        return random.choice((s, a) for s, a in score_actions if s == score)
+        ch = [a for s, a in score_actions if s == score[0]]
+        return score, random.choice(ch)
 
     def evaluate(self, game_state):
         agents = game_state.agent_states
         score = -game_state.score
         me = agents[self.index]
         if me.capsule_timer > 0:
-            score -= DIS[(me, agents[0].pos)] * 0.1
+            score -= DIS[(me.pos, agents[0].pos)] * 0.1
         else:
-            score += DIS[(me, agents[0].pos)] * 0.1
+            score += DIS[(me.pos, agents[0].pos)] * 0.1
+        return -DIS[(me.pos, agents[0].pos)]
         return score
 
 
