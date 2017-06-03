@@ -79,20 +79,39 @@ def init_screen(screen):
         for ch in line.strip().split(","):
             col = col + 1
             if ch:
-                screen.addstr(row, col, ch, style[ch])
+                # screen.addstr(row, col, ch, style[ch])
                 MAP[-1].append(ch)
-                if ch==PACMAN:
-                    game_state.agent_states.append(Pacman)
-                if ch==FOOD:
-                    game_state.food.append((row, col))
-                if ch==GHOST:
-                    game_state.agent_states.append()
+                if ch == PACMAN:
+                    pac = Pacman()
+                    pac.pos = (row-1, col-1)
+                    INIT_PACMAN = pac.pos
+                    game_state.agent_states.append(pac)
+                if ch == FOOD:
+                    game_state.foods.append((row-1, col-1))
+                if ch == GHOST:
+                    ghost = Ghost()
+                    ghost.pos = (row-1, col-1)
+                    INIT_GHOST = ghost.pos
+                    game_state.agent_states.append(ghost)
+                if ch == CAPSULE:
+                    game_state.capsules.append((row-1, col-1))
             else:
                 MAP[-1].append(' ')
                 # TODO update game_state
+    for i in range(len(game_state.agent_states)):
+        if isinstance(game_state.agent_states[i], Pacman):
+            game_state.agent_states[i], game_state.agent_states[0] = game_state.agent_states[0], game_state.agent_states[i]
 
+    display(screen, style, game_state)
 
-    run(screen, style, game_state)
+    while True:
+        time.sleep(5)
+        (row, col) = game_state.agent_states[0].pos
+        game_state.agent_states[0].pos = (row + 1, col)
+        display(screen, style, game_state)
+        pass
+
+    #run(screen, style, game_state)
 
 
 TIME_STEP = 100
@@ -160,7 +179,25 @@ def run(screen, style, game_state):
 
 
 def display(screen, style, game_state):
-    pass
+    screen.clear()
+    for row in range(len(MAP)):
+        for col in range(len(MAP[row])):
+            ch = MAP[row][col]
+            if ch == '+' or ch == '-' or ch == '|':
+                screen.addstr(row, col, ch, style[ch])
+
+    for food in game_state.foods:
+        screen.addstr(food[0], food[1], FOOD, style[FOOD])
+
+    for cap in game_state.capsules:
+        screen.addstr(cap[0], cap[1], CAPSULE, style[CAPSULE])
+
+    for agent in game_state.agent_states:
+        if isinstance(agent, Pacman):
+            screen.addstr(agent.pos[0], agent.pos[1], PACMAN, style[PACMAN])
+        else:
+            screen.addstr(agent.pos[0], agent.pos[1], GHOST, style[GHOST])
+    screen.refresh()
 
 
 def debug(info):
