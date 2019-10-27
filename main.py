@@ -52,6 +52,7 @@ INIT_PACMAN = None
 INIT_GHOST = None
 DIS = {}
 xxxx = {}
+xxxxxxx = {}
 
 def init_screen(screen):
     curses.curs_set(0)
